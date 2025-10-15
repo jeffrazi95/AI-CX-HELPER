@@ -1,4 +1,5 @@
 {
+  "buildCommand": "chmod +x tesseract/bin/tesseract",
   "builds": [
     {
       "src": "package.json",
