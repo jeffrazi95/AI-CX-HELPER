@@ -92,7 +92,8 @@ class PromptRequest(BaseModel):
 async def extract_text_from_image(image_file: UploadFile):
     try:
         lib_path = os.path.join(os.path.dirname(__file__), '..', 'tesseract', 'lib')
-        os.environ['LD_LIBRARY_PATH'] = lib_path
+        ld_library_path = os.environ.get('LD_LIBRARY_PATH', '')
+        os.environ['LD_LIBRARY_PATH'] = f'{lib_path}:{ld_library_path}'
         tesseract_path = os.path.join(os.path.dirname(__file__), '..', 'tesseract', 'bin', 'tesseract')
         pytesseract.pytesseract.tesseract_cmd = tesseract_path
         os.environ['TESSDATA_PREFIX'] = os.path.join(os.path.dirname(__file__), '..', 'tesseract', 'tessdata')
