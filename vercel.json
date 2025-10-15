@@ -9,10 +9,7 @@
     },
     {
       "src": "api/index.py",
-      "use": "@vercel/python",
-      "config": {
-        "packages": ["tesseract-ocr", "libleptonica-dev", "tesseract-ocr-eng"]
-      }
+      "use": "@vercel/python"
     }
   ],
   "routes": [
@@ -24,8 +21,5 @@
       "src": "/(.*)",
       "dest": "/$1"
     }
-  ],
-  "env": {
-    "TESSDATA_PREFIX": "/usr/share/tesseract-ocr/4.00/tessdata"
-  }
+  ]
 }

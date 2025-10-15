@@ -1,6 +1,3 @@
-
-
-
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,7 +6,7 @@ from dotenv import load_dotenv
 import os
 import openai
 from openai import OpenAI
-import pytesseract
+import easyocr
 from PIL import Image
 import io
 from datetime import datetime
@@ -93,11 +90,10 @@ class PromptRequest(BaseModel):
 
 async def extract_text_from_image(image_file: UploadFile):
     try:
-        pytesseract.pytesseract.tesseract_cmd = r'/app/.apt/usr/bin/tesseract'
         image_bytes = await image_file.read()
-        image = Image.open(io.BytesIO(image_bytes))
-        text = pytesseract.image_to_string(image, lang='eng')
-        return text
+        reader = easyocr.Reader(['en'])
+        text = reader.readtext(image_bytes, detail=0)
+        return ' '.join(text)
     except Exception as e:
         print(f"Error during OCR: {e}")
         raise HTTPException(status_code=500, detail=f"OCR failed: {e}")
