@@ -93,6 +93,7 @@ class PromptRequest(BaseModel):
 
 async def extract_text_from_image(image_file: UploadFile):
     try:
+        pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
         image_bytes = await image_file.read()
         image = Image.open(io.BytesIO(image_bytes))
         text = pytesseract.image_to_string(image)
