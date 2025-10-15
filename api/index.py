@@ -1,3 +1,5 @@
+
+
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -91,25 +93,11 @@ class PromptRequest(BaseModel):
 
 async def extract_text_from_image(image_file: UploadFile):
     try:
-        os.system("find / -name 'tesseract' > /tmp/tesseract_path.txt")
-        with open("/tmp/tesseract_path.txt", "r") as f:
-            tesseract_path = f.read().strip()
-        print(f"Tesseract path from find: {tesseract_path}")
-
-        if tesseract_path:
-            pytesseract.pytesseract.tesseract_cmd = tesseract_path
-        else:
-            print("Tesseract not found, raising RuntimeError.")
-            raise RuntimeError("Tesseract is not installed or not in the system's PATH")
-
-        print("Reading image bytes...")
+        # Removed the os.system call and hardcoded path for tesseract
+        pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
         image_bytes = await image_file.read()
         image = Image.open(io.BytesIO(image_bytes))
-        print("Image opened successfully.")
-
-        print("Calling pytesseract.image_to_string...")
         text = pytesseract.image_to_string(image, lang='eng')
-        print(f"Extracted text: {text}")
         return text
     except Exception as e:
         print(f"An error occurred during OCR: {e}")
