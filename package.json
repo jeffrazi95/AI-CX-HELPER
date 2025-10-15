@@ -24,7 +24,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "concurrently \"npm start\" \"uvicorn api.index:app --reload\""
+    "dev": "concurrently \"npm start\" \"uvicorn api.index:app --reload\"",
+    "vercel-build": "bash build.sh"
   },
   "eslintConfig": {
     "extends": [
