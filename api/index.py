@@ -1,5 +1,3 @@
-
-
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -93,9 +91,10 @@ class PromptRequest(BaseModel):
 
 async def extract_text_from_image(image_file: UploadFile):
     try:
-        print("Attempting to find Tesseract...")
-        tesseract_path = shutil.which('tesseract')
-        print(f"Tesseract path: {tesseract_path}")
+        os.system("find / -name 'tesseract' > /tmp/tesseract_path.txt")
+        with open("/tmp/tesseract_path.txt", "r") as f:
+            tesseract_path = f.read().strip()
+        print(f"Tesseract path from find: {tesseract_path}")
 
         if tesseract_path:
             pytesseract.pytesseract.tesseract_cmd = tesseract_path
