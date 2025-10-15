@@ -57,6 +57,7 @@ def create_db_and_tables():
 
 # Dependency to get a database session
 def get_session():
+    create_db_and_tables()
     with Session(engine) as session:
         yield session
 
@@ -83,53 +84,7 @@ class AssessmentResult(SQLModel, table=True):
     timestamp: datetime = Field(default_factory=datetime.utcnow)
 
 # --- FastAPI Event Handlers ---
-@app.on_event("startup")
-def on_startup():
-    create_db_and_tables()
-    # Populate initial agents if not present
-    with Session(engine) as session:
-        agent_names = ["sakinah", "dhamirah", "arfiah", "syahir", "melody"]
-        for name in agent_names:
-            existing_agent = session.exec(select(Agent).where(Agent.name == name)).first()
-            if not existing_agent:
-                agent = Agent(name=name)
-                session.add(agent)
-        session.commit()
-    # Populate initial scenarios if not present
-    with Session(engine) as session:
-        if not session.exec(select(AssessmentScenario)).first():
-            scenarios_data = [
-                {
-                    "title": "Frustrated Refund Request",
-                    "description": "A client is upset about a delayed refund for a cancelled service.",
-                    "client_message": "I cancelled my subscription a week ago and still haven't received my refund! This is unacceptable! Where is my money?!",
-                    "image_path": "/images/scenario1.png"
-                },
-                {
-                    "title": "Technical Issue with Urgent Deadline",
-                    "description": "A client is facing a critical technical issue that is impacting their business, with an urgent deadline.",
-                    "client_message": "My system is down and I can't access my data! This is costing me thousands per hour! I need this fixed NOW!"
-                },
-                {
-                    "title": "Billing Discrepancy",
-                    "description": "A client is confused about a recent charge on their bill and believes it's incorrect.",
-                    "client_message": "I was charged twice this month! This is wrong, I only signed up for one service. Fix this immediately!"
-                },
-                {
-                    "title": "Feature Request / Complaint",
-                    "description": "A client is requesting a new feature and expressing dissatisfaction that it's not already available.",
-                    "client_message": "Your software is missing a crucial feature that I need for my workflow. Why isn't this implemented yet? It's very frustrating!"
-                },
-                {
-                    "title": "Positive Feedback / Upsell Opportunity",
-                    "description": "A client is giving positive feedback but subtly hints at needing more advanced features.",
-                    "client_message": "I love your service, it's been very helpful! I just wish it could also do X, Y, and Z. That would be amazing!"
-                }
-            ]
-            for s_data in scenarios_data:
-                scenario = AssessmentScenario(**s_data)
-                session.add(scenario)
-            session.commit()
+
 
 # --- API Endpoints ---
 class PromptRequest(BaseModel):
