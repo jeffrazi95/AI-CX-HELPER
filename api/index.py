@@ -1,5 +1,3 @@
-
-
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -93,8 +91,7 @@ class PromptRequest(BaseModel):
 
 async def extract_text_from_image(image_file: UploadFile):
     try:
-        # Removed the os.system call and hardcoded path for tesseract
-        pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
+        pytesseract.pytesseract.tesseract_cmd = r'/app/.apt/usr/bin/tesseract'
         image_bytes = await image_file.read()
         image = Image.open(io.BytesIO(image_bytes))
         text = pytesseract.image_to_string(image, lang='eng')
