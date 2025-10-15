@@ -5,6 +5,4 @@ python-dotenv
 python-multipart
 Pillow
 sqlmodel
-easyocr
-torch
-torchvision
+pytesseract
