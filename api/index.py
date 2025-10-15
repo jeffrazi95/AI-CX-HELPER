@@ -1,5 +1,3 @@
-
-
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,7 +6,8 @@ from dotenv import load_dotenv
 import os
 import openai
 from openai import OpenAI
-import requests
+import pytesseract
+import shutil
 from PIL import Image
 import io
 from datetime import datetime
@@ -92,20 +91,11 @@ class PromptRequest(BaseModel):
 
 async def extract_text_from_image(image_file: UploadFile):
     try:
+        pytesseract.pytesseract.tesseract_cmd = r'/app/.apt/usr/bin/tesseract'
         image_bytes = await image_file.read()
-        
-        response = requests.post(
-            'https://api.ocr.space/parse/image',
-            headers={'apikey': 'helloworld'},
-            files={'file': ('image.png', image_bytes, image_file.content_type)}
-        )
-        response.raise_for_status()
-        
-        data = response.json()
-        if data['IsErroredOnProcessing']:
-            raise RuntimeError(data['ErrorMessage'][0])
-            
-        return data['ParsedResults'][0]['ParsedText']
+        image = Image.open(io.BytesIO(image_bytes))
+        text = pytesseract.image_to_string(image, lang='eng')
+        return text
     except Exception as e:
         print(f"An error occurred during OCR: {e}")
         import traceback
@@ -118,6 +108,41 @@ async def health_check():
 
 @api_app.get("/get_assessment_scenarios", response_model=List[AssessmentScenario])
 async def get_assessment_scenarios(week: Optional[str] = None, session: Session = Depends(get_session)):
+    # Populate initial scenarios if not present
+    if not session.exec(select(AssessmentScenario)).first():
+        scenarios_data = [
+            {
+                "title": "Frustrated Refund Request",
+                "description": "A client is upset about a delayed refund for a cancelled service.",
+                "client_message": "I cancelled my subscription a week ago and still haven't received my refund! This is unacceptable! Where is my money?!",
+                "image_path": "/images/scenario1.png"
+            },
+            {
+                "title": "Technical Issue with Urgent Deadline",
+                "description": "A client is facing a critical technical issue that is impacting their business, with an urgent deadline.",
+                "client_message": "My system is down and I can't access my data! This is costing me thousands per hour! I need this fixed NOW!"
+            },
+            {
+                "title": "Billing Discrepancy",
+                "description": "A client is confused about a recent charge on their bill and believes it's incorrect.",
+                "client_message": "I was charged twice this month! This is wrong, I only signed up for one service. Fix this immediately!"
+            },
+            {
+                "title": "Feature Request / Complaint",
+                "description": "A client is requesting a new feature and expressing dissatisfaction that it's not already available.",
+                "client_message": "Your software is missing a crucial feature that I need for my workflow. Why isn't this implemented yet? It's very frustrating!"
+            },
+            {
+                "title": "Positive Feedback / Upsell Opportunity",
+                "description": "A client is giving positive feedback but subtly hints at needing more advanced features.",
+                "client_message": "I love your service, it's been very helpful! I just wish it could also do X, Y, and Z. That would be amazing!"
+            }
+        ]
+        for s_data in scenarios_data:
+            scenario = AssessmentScenario(**s_data)
+            session.add(scenario)
+        session.commit()
+
     query = select(AssessmentScenario)
     if week:
         # Simple logic to vary scenarios by week for demonstration
