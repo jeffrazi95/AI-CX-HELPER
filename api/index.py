@@ -96,7 +96,7 @@ async def extract_text_from_image(image_file: UploadFile):
         pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
         image_bytes = await image_file.read()
         image = Image.open(io.BytesIO(image_bytes))
-        text = pytesseract.image_to_string(image)
+        text = pytesseract.image_to_string(image, lang='eng')
         return text
     except Exception as e:
         print(f"Error during OCR: {e}")
