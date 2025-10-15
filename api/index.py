@@ -6,7 +6,8 @@ from dotenv import load_dotenv
 import os
 import openai
 from openai import OpenAI
-import requests
+import pytesseract
+import shutil
 from PIL import Image
 import io
 from datetime import datetime
@@ -90,20 +91,11 @@ class PromptRequest(BaseModel):
 
 async def extract_text_from_image(image_file: UploadFile):
     try:
+        pytesseract.pytesseract.tesseract_cmd = r'/app/.apt/usr/bin/tesseract'
         image_bytes = await image_file.read()
-        
-        response = requests.post(
-            'https://api.ocr.space/parse/image',
-            headers={'apikey': 'helloworld'},
-            files={'file': ('image.png', image_bytes, image_file.content_type)}
-        )
-        response.raise_for_status()
-        
-        data = response.json()
-        if data['IsErroredOnProcessing']:
-            raise RuntimeError(data['ErrorMessage'][0])
-            
-        return data['ParsedResults'][0]['ParsedText']
+        image = Image.open(io.BytesIO(image_bytes))
+        text = pytesseract.image_to_string(image, lang='eng')
+        return text
     except Exception as e:
         print(f"An error occurred during OCR: {e}")
         import traceback
