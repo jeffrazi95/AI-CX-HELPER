@@ -1,3 +1,5 @@
+
+
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -6,7 +8,8 @@ from dotenv import load_dotenv
 import os
 import openai
 from openai import OpenAI
-import easyocr
+import pytesseract
+import shutil
 from PIL import Image
 import io
 from datetime import datetime
@@ -90,10 +93,16 @@ class PromptRequest(BaseModel):
 
 async def extract_text_from_image(image_file: UploadFile):
     try:
+        tesseract_path = shutil.which('tesseract')
+        if tesseract_path:
+            pytesseract.pytesseract.tesseract_cmd = tesseract_path
+        else:
+            raise RuntimeError("Tesseract is not installed or not in the system's PATH")
+
         image_bytes = await image_file.read()
-        reader = easyocr.Reader(['en'])
-        text = reader.readtext(image_bytes, detail=0)
-        return ' '.join(text)
+        image = Image.open(io.BytesIO(image_bytes))
+        text = pytesseract.image_to_string(image, lang='eng')
+        return text
     except Exception as e:
         print(f"Error during OCR: {e}")
         raise HTTPException(status_code=500, detail=f"OCR failed: {e}")
@@ -108,7 +117,7 @@ async def get_assessment_scenarios(week: Optional[str] = None, session: Session 
     if week:
         # Simple logic to vary scenarios by week for demonstration
         # In a real app, scenarios would be explicitly assigned to weeks or generated.
-        week_num = int(week.replace("Week ", "")) if week.startswith("Week ") else 0
+        week_num = int(week.replace("Week ",")) if week.startswith("Week ") else 0
         if week_num % 2 == 0: # Even weeks get scenarios 1, 3, 5
             query = query.where(AssessmentScenario.id.in_([1, 3, 5]))
         else: # Odd weeks get scenarios 2, 4
