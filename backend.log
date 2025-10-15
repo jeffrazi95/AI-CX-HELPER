@@ -1,0 +1,162 @@
+INFO:     Will watch for changes in these directories: ['/Users/masjep/Documents/Project/Jeff_AI_Learn/ai-cx-helper']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [79942] using StatReload
+INFO:     Started server process [79945]
+INFO:     Waiting for application startup.
+2025-10-15 12:05:47,244 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-10-15 12:05:47,244 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("agent")
+2025-10-15 12:05:47,244 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-10-15 12:05:47,244 INFO sqlalchemy.engine.Engine PRAGMA temp.table_info("agent")
+2025-10-15 12:05:47,244 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-10-15 12:05:47,244 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("assessmentscenario")
+2025-10-15 12:05:47,244 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-10-15 12:05:47,244 INFO sqlalchemy.engine.Engine PRAGMA temp.table_info("assessmentscenario")
+2025-10-15 12:05:47,244 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-10-15 12:05:47,244 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("assessmentresult")
+2025-10-15 12:05:47,244 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-10-15 12:05:47,244 INFO sqlalchemy.engine.Engine PRAGMA temp.table_info("assessmentresult")
+2025-10-15 12:05:47,244 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-10-15 12:05:47,245 INFO sqlalchemy.engine.Engine 
+CREATE TABLE agent (
+	id INTEGER NOT NULL, 
+	name VARCHAR NOT NULL, 
+	PRIMARY KEY (id)
+)
+
+
+2025-10-15 12:05:47,245 INFO sqlalchemy.engine.Engine [no key 0.00003s] ()
+2025-10-15 12:05:47,245 INFO sqlalchemy.engine.Engine CREATE INDEX ix_agent_name ON agent (name)
+2025-10-15 12:05:47,245 INFO sqlalchemy.engine.Engine [no key 0.00004s] ()
+2025-10-15 12:05:47,246 INFO sqlalchemy.engine.Engine 
+CREATE TABLE assessmentscenario (
+	id INTEGER NOT NULL, 
+	title VARCHAR NOT NULL, 
+	description VARCHAR NOT NULL, 
+	client_message VARCHAR NOT NULL, 
+	image_path VARCHAR, 
+	PRIMARY KEY (id)
+)
+
+
+2025-10-15 12:05:47,246 INFO sqlalchemy.engine.Engine [no key 0.00003s] ()
+2025-10-15 12:05:47,246 INFO sqlalchemy.engine.Engine 
+CREATE TABLE assessmentresult (
+	id INTEGER NOT NULL, 
+	agent_id VARCHAR NOT NULL, 
+	scenario_id INTEGER NOT NULL, 
+	agent_reply VARCHAR NOT NULL, 
+	score INTEGER NOT NULL, 
+	feedback_good_points VARCHAR NOT NULL, 
+	feedback_needs_improvement VARCHAR NOT NULL, 
+	timestamp DATETIME NOT NULL, 
+	PRIMARY KEY (id)
+)
+
+
+2025-10-15 12:05:47,246 INFO sqlalchemy.engine.Engine [no key 0.00002s] ()
+2025-10-15 12:05:47,247 INFO sqlalchemy.engine.Engine CREATE INDEX ix_assessmentresult_agent_id ON assessmentresult (agent_id)
+2025-10-15 12:05:47,247 INFO sqlalchemy.engine.Engine [no key 0.00002s] ()
+2025-10-15 12:05:47,247 INFO sqlalchemy.engine.Engine CREATE INDEX ix_assessmentresult_scenario_id ON assessmentresult (scenario_id)
+2025-10-15 12:05:47,247 INFO sqlalchemy.engine.Engine [no key 0.00003s] ()
+2025-10-15 12:05:47,247 INFO sqlalchemy.engine.Engine COMMIT
+2025-10-15 12:05:47,248 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-10-15 12:05:47,249 INFO sqlalchemy.engine.Engine SELECT agent.id, agent.name 
+FROM agent 
+WHERE agent.name = ?
+2025-10-15 12:05:47,249 INFO sqlalchemy.engine.Engine [generated in 0.00005s] ('sakinah',)
+2025-10-15 12:05:47,249 INFO sqlalchemy.engine.Engine INSERT INTO agent (name) VALUES (?)
+2025-10-15 12:05:47,249 INFO sqlalchemy.engine.Engine [generated in 0.00004s] ('sakinah',)
+2025-10-15 12:05:47,250 INFO sqlalchemy.engine.Engine SELECT agent.id, agent.name 
+FROM agent 
+WHERE agent.name = ?
+2025-10-15 12:05:47,250 INFO sqlalchemy.engine.Engine [cached since 0.0009072s ago] ('dhamirah',)
+2025-10-15 12:05:47,250 INFO sqlalchemy.engine.Engine INSERT INTO agent (name) VALUES (?)
+2025-10-15 12:05:47,250 INFO sqlalchemy.engine.Engine [cached since 0.0004898s ago] ('dhamirah',)
+2025-10-15 12:05:47,250 INFO sqlalchemy.engine.Engine SELECT agent.id, agent.name 
+FROM agent 
+WHERE agent.name = ?
+2025-10-15 12:05:47,250 INFO sqlalchemy.engine.Engine [cached since 0.001201s ago] ('arfiah',)
+2025-10-15 12:05:47,250 INFO sqlalchemy.engine.Engine INSERT INTO agent (name) VALUES (?)
+2025-10-15 12:05:47,250 INFO sqlalchemy.engine.Engine [cached since 0.000759s ago] ('arfiah',)
+2025-10-15 12:05:47,250 INFO sqlalchemy.engine.Engine SELECT agent.id, agent.name 
+FROM agent 
+WHERE agent.name = ?
+2025-10-15 12:05:47,250 INFO sqlalchemy.engine.Engine [cached since 0.001461s ago] ('syahir',)
+2025-10-15 12:05:47,250 INFO sqlalchemy.engine.Engine INSERT INTO agent (name) VALUES (?)
+2025-10-15 12:05:47,250 INFO sqlalchemy.engine.Engine [cached since 0.001005s ago] ('syahir',)
+2025-10-15 12:05:47,250 INFO sqlalchemy.engine.Engine SELECT agent.id, agent.name 
+FROM agent 
+WHERE agent.name = ?
+2025-10-15 12:05:47,250 INFO sqlalchemy.engine.Engine [cached since 0.001706s ago] ('melody',)
+2025-10-15 12:05:47,251 INFO sqlalchemy.engine.Engine INSERT INTO agent (name) VALUES (?)
+2025-10-15 12:05:47,251 INFO sqlalchemy.engine.Engine [cached since 0.001227s ago] ('melody',)
+2025-10-15 12:05:47,251 INFO sqlalchemy.engine.Engine COMMIT
+2025-10-15 12:05:47,251 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-10-15 12:05:47,251 INFO sqlalchemy.engine.Engine SELECT assessmentscenario.id, assessmentscenario.title, assessmentscenario.description, assessmentscenario.client_message, assessmentscenario.image_path 
+FROM assessmentscenario
+2025-10-15 12:05:47,251 INFO sqlalchemy.engine.Engine [generated in 0.00004s] ()
+2025-10-15 12:05:47,252 INFO sqlalchemy.engine.Engine INSERT INTO assessmentscenario (title, description, client_message, image_path) VALUES (?, ?, ?, ?) RETURNING id
+2025-10-15 12:05:47,252 INFO sqlalchemy.engine.Engine [generated in 0.00004s (insertmanyvalues) 1/5 (ordered; batch not supported)] ('Frustrated Refund Request', 'A client is upset about a delayed refund for a cancelled service.', "I cancelled my subscription a week ago and still haven't received my refund! This is unacceptable! Where is my money?!", '/images/scenario1.png')
+2025-10-15 12:05:47,252 INFO sqlalchemy.engine.Engine INSERT INTO assessmentscenario (title, description, client_message, image_path) VALUES (?, ?, ?, ?) RETURNING id
+2025-10-15 12:05:47,252 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/5 (ordered; batch not supported)] ('Technical Issue with Urgent Deadline', 'A client is facing a critical technical issue that is impacting their business, with an urgent deadline.', "My system is down and I can't access my data! This is costing me thousands per hour! I need this fixed NOW!", None)
+2025-10-15 12:05:47,252 INFO sqlalchemy.engine.Engine INSERT INTO assessmentscenario (title, description, client_message, image_path) VALUES (?, ?, ?, ?) RETURNING id
+2025-10-15 12:05:47,252 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/5 (ordered; batch not supported)] ('Billing Discrepancy', "A client is confused about a recent charge on their bill and believes it's incorrect.", 'I was charged twice this month! This is wrong, I only signed up for one service. Fix this immediately!', None)
+2025-10-15 12:05:47,252 INFO sqlalchemy.engine.Engine INSERT INTO assessmentscenario (title, description, client_message, image_path) VALUES (?, ?, ?, ?) RETURNING id
+2025-10-15 12:05:47,252 INFO sqlalchemy.engine.Engine [insertmanyvalues 4/5 (ordered; batch not supported)] ('Feature Request / Complaint', "A client is requesting a new feature and expressing dissatisfaction that it's not already available.", "Your software is missing a crucial feature that I need for my workflow. Why isn't this implemented yet? It's very frustrating!", None)
+2025-10-15 12:05:47,252 INFO sqlalchemy.engine.Engine INSERT INTO assessmentscenario (title, description, client_message, image_path) VALUES (?, ?, ?, ?) RETURNING id
+2025-10-15 12:05:47,252 INFO sqlalchemy.engine.Engine [insertmanyvalues 5/5 (ordered; batch not supported)] ('Positive Feedback / Upsell Opportunity', 'A client is giving positive feedback but subtly hints at needing more advanced features.', "I love your service, it's been very helpful! I just wish it could also do X, Y, and Z. That would be amazing!", None)
+2025-10-15 12:05:47,252 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     Application startup complete.
+INFO:     127.0.0.1:0 - "POST /api/generate_reply HTTP/1.1" 200 OK
+INFO:     127.0.0.1:0 - "POST /api/generate_reply HTTP/1.1" 200 OK
+INFO:     127.0.0.1:0 - "POST /api/generate_reply HTTP/1.1" 200 OK
+INFO:     127.0.0.1:0 - "POST /api/generate_reply HTTP/1.1" 200 OK
+WARNING:  StatReload detected changes in 'api/index.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [79945]
+INFO:     Started server process [80453]
+INFO:     Waiting for application startup.
+2025-10-15 12:13:40,196 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-10-15 12:13:40,197 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("agent")
+2025-10-15 12:13:40,197 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-10-15 12:13:40,197 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("assessmentscenario")
+2025-10-15 12:13:40,197 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-10-15 12:13:40,197 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("assessmentresult")
+2025-10-15 12:13:40,197 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-10-15 12:13:40,197 INFO sqlalchemy.engine.Engine COMMIT
+2025-10-15 12:13:40,197 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-10-15 12:13:40,198 INFO sqlalchemy.engine.Engine SELECT agent.id, agent.name 
+FROM agent 
+WHERE agent.name = ?
+2025-10-15 12:13:40,198 INFO sqlalchemy.engine.Engine [generated in 0.00006s] ('sakinah',)
+2025-10-15 12:13:40,199 INFO sqlalchemy.engine.Engine SELECT agent.id, agent.name 
+FROM agent 
+WHERE agent.name = ?
+2025-10-15 12:13:40,199 INFO sqlalchemy.engine.Engine [cached since 0.00031s ago] ('dhamirah',)
+2025-10-15 12:13:40,199 INFO sqlalchemy.engine.Engine SELECT agent.id, agent.name 
+FROM agent 
+WHERE agent.name = ?
+2025-10-15 12:13:40,199 INFO sqlalchemy.engine.Engine [cached since 0.0004615s ago] ('arfiah',)
+2025-10-15 12:13:40,199 INFO sqlalchemy.engine.Engine SELECT agent.id, agent.name 
+FROM agent 
+WHERE agent.name = ?
+2025-10-15 12:13:40,199 INFO sqlalchemy.engine.Engine [cached since 0.0005928s ago] ('syahir',)
+2025-10-15 12:13:40,199 INFO sqlalchemy.engine.Engine SELECT agent.id, agent.name 
+FROM agent 
+WHERE agent.name = ?
+2025-10-15 12:13:40,199 INFO sqlalchemy.engine.Engine [cached since 0.0007195s ago] ('melody',)
+2025-10-15 12:13:40,199 INFO sqlalchemy.engine.Engine COMMIT
+2025-10-15 12:13:40,199 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-10-15 12:13:40,200 INFO sqlalchemy.engine.Engine SELECT assessmentscenario.id, assessmentscenario.title, assessmentscenario.description, assessmentscenario.client_message, assessmentscenario.image_path 
+FROM assessmentscenario
+2025-10-15 12:13:40,200 INFO sqlalchemy.engine.Engine [generated in 0.00004s] ()
+2025-10-15 12:13:40,200 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     Application startup complete.
+INFO:     127.0.0.1:0 - "POST /api/generate_reply HTTP/1.1" 200 OK
+INFO:     127.0.0.1:0 - "POST /api/generate_reply HTTP/1.1" 200 OK
+INFO:     127.0.0.1:0 - "POST /api/generate_reply HTTP/1.1" 200 OK
+INFO:     127.0.0.1:0 - "POST /api/generate_reply HTTP/1.1" 200 OK
+INFO:     127.0.0.1:0 - "POST /api/generate_reply HTTP/1.1" 200 OK
+INFO:     127.0.0.1:0 - "POST /api/generate_reply HTTP/1.1" 200 OK

@@ -2,6 +2,7 @@
 
 
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
@@ -40,6 +41,7 @@ api_app.add_middleware(
 
 app = FastAPI()
 app.mount("/api", api_app)
+app.mount("/images", StaticFiles(directory="public/images"), name="images")
 
 # Configure OpenAI API key
 openai_api_key = os.getenv("OPENAI_API_KEY")
@@ -68,6 +70,7 @@ class AssessmentScenario(SQLModel, table=True):
     title: str
     description: str
     client_message: str
+    image_path: Optional[str] = None
 
 class AssessmentResult(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -99,7 +102,8 @@ def on_startup():
                 {
                     "title": "Frustrated Refund Request",
                     "description": "A client is upset about a delayed refund for a cancelled service.",
-                    "client_message": "I cancelled my subscription a week ago and still haven't received my refund! This is unacceptable! Where is my money?!"
+                    "client_message": "I cancelled my subscription a week ago and still haven't received my refund! This is unacceptable! Where is my money?!",
+                    "image_path": "/images/scenario1.png"
                 },
                 {
                     "title": "Technical Issue with Urgent Deadline",
@@ -161,19 +165,20 @@ async def get_assessment_scenarios(week: Optional[str] = None, session: Session 
     return scenarios
 
 @api_app.post("/generate_reply")
-async def generate_reply(prompt: str = Form(...), context: str = Form(""), file: UploadFile = File(None)):
+async def generate_reply(prompt: str = Form(...), context: str = Form(""), files: List[UploadFile] = File(None)):
     if not openai_api_key:
         raise HTTPException(status_code=500, detail="OpenAI API key not configured.")
 
     extracted_text = ""
-    if file:
-        if file.content_type.startswith('image/'):
-            extracted_text = await extract_text_from_image(file)
-        elif file.content_type == 'application/pdf':
-            # Placeholder for PDF text extraction
-            extracted_text = "[Text extracted from PDF - not yet implemented]"
-        else:
-            raise HTTPException(status_code=400, detail="Unsupported file type. Please upload an image or PDF.")
+    if files:
+        for file in files:
+            if file.content_type.startswith('image/'):
+                extracted_text += await extract_text_from_image(file)
+            elif file.content_type == 'application/pdf':
+                # Placeholder for PDF text extraction
+                extracted_text += "[Text extracted from PDF - not yet implemented]"
+            else:
+                raise HTTPException(status_code=400, detail="Unsupported file type. Please upload an image or PDF.")
 
     full_prompt = f"Client's Message: {extracted_text}\nAgent's Context/Question: {prompt}" if extracted_text else f"Client's Message: {prompt}\nAgent's Context/Question: {context}"
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, TextField, Button, Typography, Box, Paper, Grid, IconButton, CircularProgress } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import SendIcon from '@mui/icons-material/Send';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -20,13 +20,15 @@ const VisuallyHiddenInput = styled('input')({
 
 function AICXHelperInterface({ agentId }) {
   const [prompt, setPrompt] = useState('');
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [filePreviews, setFilePreviews] = useState([]);
   const [conversationHistory, setConversationHistory] = useState([
     { type: 'ai', content: `Hello ${agentId || 'CX'}, how can I help you today?` },
   ]);
   const [showGuidelineManager, setShowGuidelineManager] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const chatHistoryRef = useRef(null);
+  const theme = useTheme();
 
   useEffect(() => {
     if (chatHistoryRef.current) {
@@ -39,22 +41,49 @@ function AICXHelperInterface({ agentId }) {
   }, [agentId]);
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    const files = Array.from(event.target.files);
+    if (files.length + selectedFiles.length > 5) {
+      alert('You can only upload a maximum of 5 files.');
+      return;
+    }
+
+    setSelectedFiles([...selectedFiles, ...files]);
+
+    const newPreviews = files.map(file => {
+      if (file.type.startsWith('image/')) {
+        return URL.createObjectURL(file);
+      }
+      return null;
+    }).filter(preview => preview !== null);
+
+    setFilePreviews([...filePreviews, ...newPreviews]);
   };
 
   const handleSendPrompt = async () => {
-    if (!prompt && !selectedFile) return;
+    if (!prompt && selectedFiles.length === 0) return;
 
     setIsLoading(true);
-    const userMessage = { type: 'user', content: prompt || (selectedFile ? selectedFile.name : '') };
+
+    const messageContent = (
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography variant="body2">{prompt}</Typography>
+        <Box>
+          {filePreviews.map((preview, index) => (
+            <img key={index} src={preview} alt={`Preview ${index}`} style={{ maxWidth: '100px', maxHeight: '100px', marginRight: '10px' }} />
+          ))}
+        </Box>
+      </Box>
+    );
+
+    const userMessage = { type: 'user', content: messageContent };
     setConversationHistory((prev) => [...prev, userMessage]);
 
     const formData = new FormData();
     formData.append('prompt', prompt);
     formData.append('context', ""); // Context is still empty for now
-    if (selectedFile) {
-      formData.append('file', selectedFile);
-    }
+    selectedFiles.forEach(file => {
+      formData.append('files', file);
+    });
 
     try {
       const response = await fetch('/api/generate_reply', {
@@ -102,7 +131,8 @@ function AICXHelperInterface({ agentId }) {
     } finally {
       setIsLoading(false);
       setPrompt('');
-      setSelectedFile(null);
+      setSelectedFiles([]);
+      setFilePreviews([]);
     }
   };
 
@@ -133,7 +163,7 @@ function AICXHelperInterface({ agentId }) {
                 <Paper sx={{
                   padding: '0.4rem 0.8rem',
                   maxWidth: '75%',
-                  backgroundColor: msg.type === 'user' ? '#1976d2' : '#333',
+                  backgroundColor: msg.type === 'user' ? theme.palette.secondary.main : theme.palette.background.paper,
                   color: 'white',
                   borderRadius: '12px',
                   borderBottomLeftRadius: msg.type === 'user' ? '12px' : '4px',
@@ -150,6 +180,14 @@ function AICXHelperInterface({ agentId }) {
             ))}
           </Box>
 
+          {filePreviews.length > 0 && (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
+              {filePreviews.map((preview, index) => (
+                <img key={index} src={preview} alt={`Preview ${index}`} style={{ maxWidth: '100px', maxHeight: '100px' }} />
+              ))}
+            </Box>
+          )}
+
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0' }}>
             <TextField
               fullWidth
@@ -164,9 +202,9 @@ function AICXHelperInterface({ agentId }) {
             />
             <IconButton component="label" color="primary" size="small" disabled={isLoading} sx={{ color: '#f50057' }}>
               <UploadFileIcon fontSize="small" />
-              <VisuallyHiddenInput type="file" onChange={handleFileChange} />
+              <VisuallyHiddenInput type="file" multiple onChange={handleFileChange} />
             </IconButton>
-            <Button variant="contained" endIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <SendIcon />} onClick={handleSendPrompt} disabled={isLoading || (!prompt && !selectedFile)} size="small">
+            <Button variant="contained" endIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <SendIcon />} onClick={handleSendPrompt} disabled={isLoading || (!prompt && selectedFiles.length === 0)} size="small">
               Send
             </Button>
           </Box>

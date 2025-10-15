@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Button, Box, TextField, CircularProgress, Alert, Paper, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Container, Typography, Button, Box, TextField, CircularProgress, Alert, Paper, Select, MenuItem, FormControl, InputLabel, Modal } from '@mui/material';
 
 function AssessmentPage({ agentId }) {
   const [scenarios, setScenarios] = useState([]);
@@ -12,6 +12,15 @@ function AssessmentPage({ agentId }) {
   const [submitted, setSubmitted] = useState(false);
   const [availableWeeks, setAvailableWeeks] = useState([]);
   const [selectedWeek, setSelectedWeek] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleImageClick = (image) => {
+    setSelectedImage(image);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedImage(null);
+  };
 
   useEffect(() => {
     const fetchWeeks = async () => {
@@ -168,6 +177,16 @@ function AssessmentPage({ agentId }) {
               <Typography variant="body1" sx={{ marginBottom: '0.5rem' }}>
                 Client Message: {scenario.client_message}
               </Typography>
+              {scenario.image_path && (
+                <Box sx={{ marginBottom: '1rem' }}>
+                  <img 
+                    src={scenario.image_path} 
+                    alt={`Scenario ${scenario.id}`} 
+                    style={{ maxWidth: '100px', height: 'auto', cursor: 'pointer' }} 
+                    onClick={() => handleImageClick(scenario.image_path)} 
+                  />
+                </Box>
+              )}
               <TextField
                 fullWidth
                 multiline
@@ -201,6 +220,26 @@ function AssessmentPage({ agentId }) {
           <Button variant="contained" onClick={() => setSubmitted(false)}>Retake Assessment</Button>
         </Box>
       )}
+
+      <Modal
+        open={!!selectedImage}
+        onClose={handleCloseModal}
+        aria-labelledby="image-modal-title"
+        aria-describedby="image-modal-description"
+      >
+        <Box sx={{ 
+          position: 'absolute', 
+          top: '50%', 
+          left: '50%', 
+          transform: 'translate(-50%, -50%)', 
+          bgcolor: 'background.paper', 
+          boxShadow: 24, 
+          p: 4 
+        }}>
+          <img src={selectedImage} alt="Full size" style={{ maxWidth: '90vw', maxHeight: '90vh' }} />
+        </Box>
+      </Modal>
+
     </Container>
   );
 }
