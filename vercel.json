@@ -25,5 +25,9 @@
       "src": "/(.*)",
       "dest": "/$1"
     }
-  ]
+  ],
+  "buildCommand": "echo \"Starting build command...\" && sudo apt-get update && sudo apt-get install -y tesseract-ocr && echo \"Tesseract installed.\" && ls -l /usr/bin/tesseract && which tesseract",
+  "env": {
+    "TESSDATA_PREFIX": "/usr/share/tesseract-ocr/4.00/tessdata"
+  }
 }
