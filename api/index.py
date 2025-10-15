@@ -1,3 +1,5 @@
+
+
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -116,52 +118,65 @@ async def health_check():
 
 @api_app.get("/get_assessment_scenarios", response_model=List[AssessmentScenario])
 async def get_assessment_scenarios(week: Optional[str] = None, session: Session = Depends(get_session)):
-    # Populate initial scenarios if not present
-    if not session.exec(select(AssessmentScenario)).first():
-        scenarios_data = [
-            {
-                "title": "Frustrated Refund Request",
-                "description": "A client is upset about a delayed refund for a cancelled service.",
-                "client_message": "I cancelled my subscription a week ago and still haven't received my refund! This is unacceptable! Where is my money?!",
-                "image_path": "/images/scenario1.png"
-            },
-            {
-                "title": "Technical Issue with Urgent Deadline",
-                "description": "A client is facing a critical technical issue that is impacting their business, with an urgent deadline.",
-                "client_message": "My system is down and I can't access my data! This is costing me thousands per hour! I need this fixed NOW!"
-            },
-            {
-                "title": "Billing Discrepancy",
-                "description": "A client is confused about a recent charge on their bill and believes it's incorrect.",
-                "client_message": "I was charged twice this month! This is wrong, I only signed up for one service. Fix this immediately!"
-            },
-            {
-                "title": "Feature Request / Complaint",
-                "description": "A client is requesting a new feature and expressing dissatisfaction that it's not already available.",
-                "client_message": "Your software is missing a crucial feature that I need for my workflow. Why isn't this implemented yet? It's very frustrating!"
-            },
-            {
-                "title": "Positive Feedback / Upsell Opportunity",
-                "description": "A client is giving positive feedback but subtly hints at needing more advanced features.",
-                "client_message": "I love your service, it's been very helpful! I just wish it could also do X, Y, and Z. That would be amazing!"
-            }
-        ]
-        for s_data in scenarios_data:
-            scenario = AssessmentScenario(**s_data)
-            session.add(scenario)
-        session.commit()
+    try:
+        print("Getting assessment scenarios...")
+        # Populate initial scenarios if not present
+        if not session.exec(select(AssessmentScenario)).first():
+            print("No assessment scenarios found, populating initial data...")
+            scenarios_data = [
+                {
+                    "title": "Frustrated Refund Request",
+                    "description": "A client is upset about a delayed refund for a cancelled service.",
+                    "client_message": "I cancelled my subscription a week ago and still haven't received my refund! This is unacceptable! Where is my money?!",
+                    "image_path": "/images/scenario1.png"
+                },
+                {
+                    "title": "Technical Issue with Urgent Deadline",
+                    "description": "A client is facing a critical technical issue that is impacting their business, with an urgent deadline.",
+                    "client_message": "My system is down and I can\'t access my data! This is costing me thousands per hour! I need this fixed NOW!"
+                },
+                {
+                    "title": "Billing Discrepancy",
+                    "description": "A client is confused about a recent charge on their bill and believes it\'s incorrect.",
+                    "client_message": "I was charged twice this month! This is wrong, I only signed up for one service. Fix this immediately!"
+                },
+                {
+                    "title": "Feature Request / Complaint",
+                    "description": "A client is requesting a new feature and expressing dissatisfaction that it\'s not already available.",
+                    "client_message": "Your software is missing a crucial feature that I need for my workflow. Why isn\'t this implemented yet? It\'s very frustrating!"
+                },
+                {
+                    "title": "Positive Feedback / Upsell Opportunity",
+                    "description": "A client is giving positive feedback but subtly hints at needing more advanced features.",
+                    "client_message": "I love your service, it\'s been very helpful! I just wish it could also do X, Y, and Z. That would be amazing!"
+                }
+            ]
+            for s_data in scenarios_data:
+                scenario = AssessmentScenario(**s_data)
+                session.add(scenario)
+            session.commit()
+            print("Initial data populated.")
 
-    query = select(AssessmentScenario)
-    if week:
-        # Simple logic to vary scenarios by week for demonstration
-        # In a real app, scenarios would be explicitly assigned to weeks or generated.
-        week_num = int(week.replace("Week ", "")) if week.startswith("Week ") else 0
-        if week_num % 2 == 0: # Even weeks get scenarios 1, 3, 5
-            query = query.where(AssessmentScenario.id.in_([1, 3, 5]))
-        else: # Odd weeks get scenarios 2, 4
-            query = query.where(AssessmentScenario.id.in_([2, 4]))
-    scenarios = session.exec(query).all()
-    return scenarios
+        query = select(AssessmentScenario)
+        if week:
+            print(f"Filtering scenarios for week: {week}")
+            # Simple logic to vary scenarios by week for demonstration
+            # In a real app, scenarios would be explicitly assigned to weeks or generated.
+            week_num = int(week.replace("Week ",")) if week.startswith("Week ") else 0
+            if week_num % 2 == 0: # Even weeks get scenarios 1, 3, 5
+                query = query.where(AssessmentScenario.id.in_([1, 3, 5]))
+            else: # Odd weeks get scenarios 2, 4
+                query = query.where(AssessmentScenario.id.in_([2, 4]))
+        
+        print("Executing query...")
+        scenarios = session.exec(query).all()
+        print(f"Found {len(scenarios)} scenarios.")
+        return scenarios
+    except Exception as e:
+        print(f"An error occurred in get_assessment_scenarios: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Failed to get assessment scenarios: {e}")
 
 @api_app.post("/generate_reply")
 async def generate_reply(prompt: str = Form(...), context: str = Form(""), files: List[UploadFile] = File(None)):
