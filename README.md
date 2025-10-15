@@ -1,6 +1,6 @@
 # AI CX Helper
 
-An AI-powered customer experience training and assessment tool for customer service agents.
+An AI-powered training and assessment tool for customer service agents.
 
 ## Features
 
