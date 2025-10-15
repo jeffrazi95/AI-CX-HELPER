@@ -1,5 +1,4 @@
 {
-  "buildCommand": "chmod +x tesseract/bin/tesseract",
   "builds": [
     {
       "src": "package.json",
@@ -12,7 +11,6 @@
       "src": "api/index.py",
       "use": "@vercel/python",
       "config": {
-
         "maxDuration": 30
       }
     }
@@ -26,5 +24,6 @@
       "src": "/(.*)",
       "dest": "/$1"
     }
-  ]
+  ],
+  "buildCommand": "apt-get update && apt-get install -y tesseract-ocr libleptonica-dev"
 }
