@@ -5,4 +5,4 @@ python-dotenv
 python-multipart
 Pillow
 sqlmodel
-requests
+pytesseract
