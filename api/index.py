@@ -1,3 +1,5 @@
+
+
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -126,7 +128,7 @@ async def get_assessment_scenarios(week: Optional[str] = None, session: Session 
     if week:
         # Simple logic to vary scenarios by week for demonstration
         # In a real app, scenarios would be explicitly assigned to weeks or generated.
-        week_num = int(week.replace("Week ",")) if week.startswith("Week ") else 0
+        week_num = int(week.replace("Week ", "")) if week.startswith("Week ") else 0
         if week_num % 2 == 0: # Even weeks get scenarios 1, 3, 5
             query = query.where(AssessmentScenario.id.in_([1, 3, 5]))
         else: # Odd weeks get scenarios 2, 4
