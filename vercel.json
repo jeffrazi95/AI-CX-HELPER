@@ -9,10 +9,7 @@
     },
     {
       "src": "api/index.py",
-      "use": "@vercel/python",
-      "config": {
-        "packages": ["tesseract-ocr", "libleptonica-dev", "tesseract-ocr-eng"]
-      }
+      "use": "@vercel/python"
     }
   ],
   "routes": [
