@@ -41,7 +41,7 @@ api_app.add_middleware(
 
 app = FastAPI()
 app.mount("/api", api_app)
-app.mount("/images", StaticFiles(directory="public/images"), name="images")
+
 
 # Configure OpenAI API key
 openai_api_key = os.getenv("OPENAI_API_KEY")
