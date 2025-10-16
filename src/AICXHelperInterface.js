@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, TextField, Button, Typography, Box, Paper, Grid, IconButton, CircularProgress } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import SendIcon from '@mui/icons-material/Send';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import SettingsIcon from '@mui/icons-material/Settings';
 import GuidelineManager from './GuidelineManager';
+import { useNavigate } from 'react-router-dom';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -19,6 +20,7 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 function AICXHelperInterface({ agentId }) {
+  const navigate = useNavigate();
   const [prompt, setPrompt] = useState('');
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [filePreviews, setFilePreviews] = useState([]);
@@ -28,7 +30,7 @@ function AICXHelperInterface({ agentId }) {
   const [showGuidelineManager, setShowGuidelineManager] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const chatHistoryRef = useRef(null);
-  const theme = useTheme();
+
 
   useEffect(() => {
     if (chatHistoryRef.current) {
@@ -143,74 +145,89 @@ function AICXHelperInterface({ agentId }) {
   };
 
   return (
-    <Container maxWidth="md" sx={{ height: '90vh', display: 'flex', flexDirection: 'column', padding: '1rem' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-        <Typography variant="h5" component="h1">
-          Hello
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', bgcolor: '#131314' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', p: 2, borderBottom: '1px solid #444' }}>
+        <Button variant="outlined" onClick={() => navigate('/')} sx={{ mr: 2, color: 'white', borderColor: 'white' }}>
+          Back
+        </Button>
+        <Typography variant="h6" component="h1" sx={{ flexGrow: 1, color: 'white' }}>
+          Assist Me
         </Typography>
-        <IconButton color="inherit" size="small" onClick={() => setShowGuidelineManager(!showGuidelineManager)}>
+        <IconButton color="inherit" size="small" onClick={() => setShowGuidelineManager(!showGuidelineManager)} sx={{ color: 'white' }}>
           <SettingsIcon />
         </IconButton>
       </Box>
 
-      {showGuidelineManager && <GuidelineManager />}
-
-      {!showGuidelineManager && (
-        <>
-          <Box ref={chatHistoryRef} sx={{ flexGrow: 1, overflowY: 'auto', padding: '0.8rem', border: '1px solid #444', borderRadius: '8px', marginBottom: '0.8rem', backgroundColor: '#222' }}>
-            {conversationHistory.map((msg, index) => (
-              <Box key={index} sx={{ display: 'flex', justifyContent: msg.type === 'user' ? 'flex-end' : 'flex-start', marginBottom: '0.4rem' }}>
-                <Paper sx={{
-                  padding: '0.4rem 0.8rem',
-                  maxWidth: '75%',
-                  backgroundColor: msg.type === 'user' ? theme.palette.secondary.main : theme.palette.background.paper,
-                  color: 'white',
-                  borderRadius: '12px',
-                  borderBottomLeftRadius: msg.type === 'user' ? '12px' : '4px',
-                  borderBottomRightRadius: msg.type === 'user' ? '4px' : '12px',
-                  fontSize: '0.875rem',
+      <Container maxWidth="md" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', py: 3 }}>
+        {showGuidelineManager ? (
+          <GuidelineManager />
+        ) : (
+          <>
+            <Box ref={chatHistoryRef} sx={{ flexGrow: 1, overflowY: 'auto', p: 2 }}>
+              {conversationHistory.map((msg, index) => (
+                <Box key={index} sx={{ 
+                  display: 'flex', 
+                  justifyContent: msg.type === 'user' ? 'flex-end' : 'flex-start', 
+                  mb: 2 
                 }}>
-                  {typeof msg.content === 'string' ? (
-                    <Typography variant="body2">{msg.content}</Typography>
-                  ) : (
-                    msg.content
-                  )}
-                </Paper>
-              </Box>
-            ))}
-          </Box>
-
-          {filePreviews.length > 0 && (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
-              {filePreviews.map((preview, index) => (
-                <img key={index} src={preview} alt={`Preview ${index}`} style={{ maxWidth: '100px', maxHeight: '100px' }} />
+                  <Paper sx={{
+                    p: 1.5,
+                    maxWidth: '80%',
+                    bgcolor: msg.type === 'user' ? '#3367D6' : '#3C4043',
+                    color: 'white',
+                    borderRadius: '18px',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+                  }}>
+                    {typeof msg.content === 'string' ? (
+                      <Typography variant="body1">{msg.content}</Typography>
+                    ) : (
+                      msg.content
+                    )}
+                  </Paper>
+                </Box>
               ))}
             </Box>
-          )}
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0' }}>
-            <TextField
-              fullWidth
-              multiline
-              variant="outlined"
-              placeholder="Enter your prompt or client message..."
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              sx={{ '& .MuiOutlinedInput-root': { backgroundColor: '#333', padding: '8px 12px' } }}
-              InputProps={{ style: { fontSize: '0.875rem' } }}
-              disabled={isLoading}
-            />
-            <IconButton component="label" color="primary" size="small" disabled={isLoading} sx={{ color: '#f50057' }}>
-              <UploadFileIcon fontSize="small" />
-              <VisuallyHiddenInput type="file" multiple onChange={handleFileChange} />
-            </IconButton>
-            <Button variant="contained" endIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <SendIcon />} onClick={handleSendPrompt} disabled={isLoading || (!prompt && selectedFiles.length === 0)} size="small">
-              Send
-            </Button>
-          </Box>
-        </>
-      )}
-    </Container>
+            <Box sx={{ p: 2, borderTop: '1px solid #444' }}>
+              {filePreviews.length > 0 && (
+                <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
+                  {filePreviews.map((preview, index) => (
+                    <img key={index} src={preview} alt={`Preview ${index}`} style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover' }} />
+                  ))}
+                </Box>
+              )}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, bgcolor: '#3C4043', borderRadius: '24px', p: 0.5 }}>
+                <TextField
+                  fullWidth
+                  multiline
+                  maxRows={5}
+                  variant="standard"
+                  placeholder="Enter a prompt here"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      color: 'white',
+                      fontSize: '1rem',
+                      p: '10px 20px',
+                    },
+                  }}
+                  InputProps={{ disableUnderline: true }}
+                  disabled={isLoading}
+                />
+                <IconButton component="label" disabled={isLoading} sx={{ color: '#9E9E9E' }}>
+                  <UploadFileIcon />
+                  <VisuallyHiddenInput type="file" multiple onChange={handleFileChange} />
+                </IconButton>
+                <IconButton onClick={handleSendPrompt} disabled={isLoading || (!prompt && selectedFiles.length === 0)} sx={{ color: '#8AB4F8' }}>
+                  {isLoading ? <CircularProgress size={24} color="inherit" /> : <SendIcon />}
+                </IconButton>
+              </Box>
+            </Box>
+          </>
+        )}
+      </Container>
+    </Box>
   );
 }
 
