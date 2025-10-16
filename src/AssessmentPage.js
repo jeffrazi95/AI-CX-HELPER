@@ -180,10 +180,10 @@ function AssessmentPage({ agentId }) {
               {scenario.image_path && (
                 <Box sx={{ marginBottom: '1rem' }}>
                   <img 
-                    src={scenario.image_path} 
+                    src={process.env.PUBLIC_URL + scenario.image_path} 
                     alt={`Scenario ${scenario.id}`} 
                     style={{ maxWidth: '100px', height: 'auto', cursor: 'pointer' }} 
-                    onClick={() => handleImageClick(scenario.image_path)} 
+                    onClick={() => handleImageClick(process.env.PUBLIC_URL + scenario.image_path)} 
                   />
                 </Box>
               )}
@@ -218,10 +218,16 @@ function AssessmentPage({ agentId }) {
                 <Typography component="span" sx={{ fontWeight: 'bold' }}>Score:</Typography> {result.score}/100
               </Typography>
               <Typography variant="body1" component="div">
-                <Typography component="span" sx={{ fontWeight: 'bold' }}>Good Points:</Typography> {result.feedback.good_points.join('; ')}
+                <Typography component="span" sx={{ fontWeight: 'bold' }}>Good Points:</Typography>
+                {result.feedback.good_points.map((point, i) => (
+                  <div key={i}>{point}</div>
+                ))}
               </Typography>
               <Typography variant="body1" component="div">
-                <Typography component="span" sx={{ fontWeight: 'bold' }}>Needs Improvement:</Typography> {result.feedback.needs_improvement.join('; ')}
+                <Typography component="span" sx={{ fontWeight: 'bold' }}>Needs Improvement:</Typography>
+                {result.feedback.needs_improvement.map((point, i) => (
+                  <div key={i}>{point}</div>
+                ))}
               </Typography>
             </Paper>
           ))}
