@@ -125,8 +125,7 @@ async def get_assessment_scenarios(week: Optional[str] = None, session: Session 
             {
                 "title": "Frustrated Refund Request",
                 "description": "A client is upset about a delayed refund for a cancelled service.",
-                "client_message": "I cancelled my subscription a week ago and still haven't received my refund! This is unacceptable! Where is my money?!",
-                "image_path": "/images/scenario1.png"
+                "client_message": "I cancelled my subscription a week ago and still haven't received my refund! This is unacceptable! Where is my money?!"
             },
             {
                 "title": "Technical Issue with Urgent Deadline",
