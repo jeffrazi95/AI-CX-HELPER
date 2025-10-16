@@ -5,6 +5,7 @@ import SendIcon from '@mui/icons-material/Send';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import SettingsIcon from '@mui/icons-material/Settings';
 import GuidelineManager from './GuidelineManager';
+import { useNavigate } from 'react-router-dom';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -19,6 +20,7 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 function AICXHelperInterface({ agentId }) {
+  const navigate = useNavigate();
   const [prompt, setPrompt] = useState('');
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [filePreviews, setFilePreviews] = useState([]);
@@ -144,9 +146,12 @@ function AICXHelperInterface({ agentId }) {
 
   return (
     <Container maxWidth="md" sx={{ height: '90vh', display: 'flex', flexDirection: 'column', padding: '1rem' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-        <Typography variant="h5" component="h1">
-          Hello
+      <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
+        <Button variant="outlined" onClick={() => navigate('/')} sx={{ mr: 2 }}>
+          Back
+        </Button>
+        <Typography variant="h5" component="h1" sx={{ flexGrow: 1 }}>
+          Assist Me
         </Typography>
         <IconButton color="inherit" size="small" onClick={() => setShowGuidelineManager(!showGuidelineManager)}>
           <SettingsIcon />
