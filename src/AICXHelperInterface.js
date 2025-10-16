@@ -166,14 +166,15 @@ function AICXHelperInterface({ agentId }) {
             {conversationHistory.map((msg, index) => (
               <Box key={index} sx={{ display: 'flex', justifyContent: msg.type === 'user' ? 'flex-end' : 'flex-start', marginBottom: '0.4rem' }}>
                 <Paper sx={{
-                  padding: '0.4rem 0.8rem',
+                  padding: '1rem 1.5rem',
                   maxWidth: '75%',
-                  backgroundColor: msg.type === 'user' ? theme.palette.secondary.main : theme.palette.background.paper,
+                  backgroundColor: msg.type === 'user' ? theme.palette.primary.main : '#424242',
                   color: 'white',
-                  borderRadius: '12px',
-                  borderBottomLeftRadius: msg.type === 'user' ? '12px' : '4px',
-                  borderBottomRightRadius: msg.type === 'user' ? '4px' : '12px',
-                  fontSize: '0.875rem',
+                  borderRadius: '20px',
+                  borderBottomLeftRadius: msg.type === 'user' ? '20px' : '5px',
+                  borderBottomRightRadius: msg.type === 'user' ? '5px' : '20px',
+                  fontSize: '1rem',
+                  boxShadow: '0px 2px 5px rgba(0,0,0,0.1)'
                 }}>
                   {typeof msg.content === 'string' ? (
                     <Typography variant="body2">{msg.content}</Typography>
@@ -193,25 +194,35 @@ function AICXHelperInterface({ agentId }) {
             </Box>
           )}
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem' }}>
             <TextField
               fullWidth
               multiline
               variant="outlined"
-              placeholder="Enter your prompt or client message..."
+              placeholder="Type your message..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              sx={{ '& .MuiOutlinedInput-root': { backgroundColor: '#333', padding: '8px 12px' } }}
-              InputProps={{ style: { fontSize: '0.875rem' } }}
+              sx={{ 
+                '& .MuiOutlinedInput-root': { 
+                  borderRadius: '20px',
+                  backgroundColor: '#333',
+                  padding: '10px 15px',
+                  color: 'white'
+                },
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#555'
+                }
+              }}
+              InputProps={{ style: { fontSize: '1rem' } }}
               disabled={isLoading}
             />
-            <IconButton component="label" color="primary" size="small" disabled={isLoading} sx={{ color: '#f50057' }}>
-              <UploadFileIcon fontSize="small" />
+            <IconButton component="label" color="primary" disabled={isLoading}>
+              <UploadFileIcon />
               <VisuallyHiddenInput type="file" multiple onChange={handleFileChange} />
             </IconButton>
-            <Button variant="contained" endIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <SendIcon />} onClick={handleSendPrompt} disabled={isLoading || (!prompt && selectedFiles.length === 0)} size="small">
-              Send
-            </Button>
+            <IconButton color="primary" onClick={handleSendPrompt} disabled={isLoading || (!prompt && selectedFiles.length === 0)}>
+              {isLoading ? <CircularProgress size={24} /> : <SendIcon />}
+            </IconButton>
           </Box>
         </>
       )}
