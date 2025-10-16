@@ -147,7 +147,7 @@ function AICXHelperInterface({ agentId }) {
   return (
     <Container maxWidth="md" sx={{ height: '90vh', display: 'flex', flexDirection: 'column', padding: '1rem' }}>
       <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
-        <Button variant="outlined" onClick={() => navigate('/')} sx={{ mr: 2 }}>
+        <Button variant="outlined" onClick={() => navigate('/')} sx={{ mr: 2, color: 'white', borderColor: 'white' }}>
           Back
         </Button>
         <Typography variant="h5" component="h1" sx={{ flexGrow: 1 }}>
