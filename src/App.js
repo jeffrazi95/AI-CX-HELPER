@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 
@@ -7,7 +8,6 @@ import ModeSelectionPage from './ModeSelectionPage';
 import AICXHelperInterface from './AICXHelperInterface';
 import AssessmentPage from './AssessmentPage';
 import AssessmentDashboardPage from './AssessmentDashboardPage';
-import LoginPage from './LoginPage';
 
 const theme = createTheme({
   palette: {
@@ -45,30 +45,16 @@ function AssessmentPageWrapper() {
   return <AssessmentPage agentId={agentId} />;
 }
 
-function PrivateRoute({ children }) {
-  const isAuthenticated = !!localStorage.getItem('userEmail');
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-  const email = localStorage.getItem('userEmail');
-  if (!email.endsWith('@ajobthing.com')) {
-    localStorage.removeItem('userEmail');
-    return <Navigate to="/login" replace />;
-  }
-  return children;
-}
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/" element={<PrivateRoute><ModeSelectionPage /></PrivateRoute>} />
-          <Route path="/assist" element={<PrivateRoute><AICXHelperInterfaceWrapper /></PrivateRoute>} />
-          <Route path="/assessment" element={<PrivateRoute><AssessmentPageWrapper /></PrivateRoute>} />
-          <Route path="/assessment/dashboard" element={<PrivateRoute><AssessmentDashboardPage /></PrivateRoute>} />
+          <Route path="/" element={<ModeSelectionPage />} />
+          <Route path="/assist" element={<AICXHelperInterfaceWrapper />} />
+          <Route path="/assessment" element={<AssessmentPageWrapper />} />
+          <Route path="/assessment/dashboard" element={<AssessmentDashboardPage />} />
         </Routes>
       </Router>
     </ThemeProvider>
