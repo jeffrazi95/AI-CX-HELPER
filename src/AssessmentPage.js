@@ -152,7 +152,7 @@ function AssessmentPage({ agentId }) {
         <Typography variant="h4" component="h1" gutterBottom>
           Assessment for {agentId ? agentId.charAt(0).toUpperCase() + agentId.slice(1) : 'Agent'}
         </Typography>
-        <Button variant="outlined" onClick={() => navigate('/')}>
+        <Button variant="outlined" onClick={() => navigate('/')} sx={{ color: 'white', borderColor: 'white' }}>
           Back
         </Button>
       </Box>
