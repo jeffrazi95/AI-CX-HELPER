@@ -300,13 +300,13 @@ async def submit_assessment(submission: AssessmentSubmission, session: Session =
         good_points_match = re.search(r"Good Points:\s*(.*?)(?:\nNeeds Improvement:|$)", llm_content, re.DOTALL)
         if good_points_match:
             good_points_str = good_points_match.group(1).strip()
-            good_points = [p.strip() for p in good_points_str.split(';') if p.strip()]
+            good_points = [p.strip() for p in re.split(r';|(?=\d\.)', good_points_str) if p.strip()]
 
         # Use regex to find Needs Improvement
         needs_improvement_match = re.search(r"Needs Improvement:\s*(.*)", llm_content, re.DOTALL)
         if needs_improvement_match:
             needs_improvement_str = needs_improvement_match.group(1).strip()
-            needs_improvement = [p.strip() for p in needs_improvement_str.split(';') if p.strip()]
+            needs_improvement = [p.strip() for p in re.split(r';|(?=\d\.)', needs_improvement_str) if p.strip()]
 
         # Save result to database
         assessment_result_db = AssessmentResult(
