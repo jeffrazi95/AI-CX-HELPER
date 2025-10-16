@@ -184,7 +184,7 @@ function AssessmentPage({ agentId }) {
               backgroundColor: '#2c2c2c',
               border: '1px solid #444'
             }}>
-              <Typography variant="h5" component="h2" gutterBottom sx={{ color: '#f50057', fontWeight: 'bold' }}>
+              <Typography variant="h5" component="h2" gutterBottom sx={{ color: '#fff', fontWeight: 'bold' }}>
                 Scenario {scenario.id}: {scenario.title}
               </Typography>
               <Typography variant="body1" sx={{ marginBottom: '1.5rem', color: '#ccc' }}>
