@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, TextField, Button, Typography, Box, Paper, Grid, IconButton, CircularProgress } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import SendIcon from '@mui/icons-material/Send';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -30,7 +30,7 @@ function AICXHelperInterface({ agentId }) {
   const [showGuidelineManager, setShowGuidelineManager] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const chatHistoryRef = useRef(null);
-  const theme = useTheme();
+
 
   useEffect(() => {
     if (chatHistoryRef.current) {
