@@ -178,10 +178,10 @@ function AssessmentPage({ agentId }) {
         <>
           {scenarios.map((scenario) => (
             <Paper key={scenario.id} elevation={3} sx={{ 
-              marginBottom: '2rem', 
-              padding: '2rem', 
+              marginBottom: '1.5rem', 
+              padding: '1.5rem', 
               borderRadius: '15px', 
-              backgroundColor: '#2c2c2c',
+              backgroundColor: '#2c2c2c !important',
               border: '1px solid #444'
             }}>
               <Typography variant="h5" component="h2" gutterBottom sx={{ color: '#fff', fontWeight: 'bold' }}>
@@ -203,7 +203,7 @@ function AssessmentPage({ agentId }) {
               <TextField
                 fullWidth
                 multiline
-                rows={5}
+                rows={3}
                 variant="outlined"
                 placeholder="Craft your response here..."
                 value={agentReplies[scenario.id]}
@@ -233,10 +233,10 @@ function AssessmentPage({ agentId }) {
           <Typography variant="h5" gutterBottom>Assessment Results for {selectedWeek}</Typography>
           {assessmentResults.map((result, index) => (
             <Paper key={index} elevation={3} sx={{ 
-              padding: '2rem', 
-              marginBottom: '1.5rem', 
+              padding: '1.5rem', 
+              marginBottom: '1rem', 
               borderRadius: '15px', 
-              backgroundColor: '#2c2c2c',
+              backgroundColor: '#2c2c2c !important',
               border: '1px solid #444'
             }}>
               <Typography variant="h6">Scenario {result.scenario_id}</Typography>
