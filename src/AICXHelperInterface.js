@@ -174,7 +174,7 @@ function AICXHelperInterface({ agentId }) {
                   borderBottomLeftRadius: msg.type === 'user' ? '20px' : '5px',
                   borderBottomRightRadius: msg.type === 'user' ? '5px' : '20px',
                   fontSize: '1rem',
-                  boxShadow: '0px 2px 5px rgba(0,0,0,0.1)'
+                  boxShadow: '0px 3px 6px rgba(0,0,0,0.15)'
                 }}>
                   {typeof msg.content === 'string' ? (
                     <Typography variant="body2">{msg.content}</Typography>
@@ -194,7 +194,7 @@ function AICXHelperInterface({ agentId }) {
             </Box>
           )}
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '1.1rem', padding: '1rem' }}>
             <TextField
               fullWidth
               multiline
