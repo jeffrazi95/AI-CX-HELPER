@@ -145,88 +145,89 @@ function AICXHelperInterface({ agentId }) {
   };
 
   return (
-    <Container maxWidth="md" sx={{ height: '90vh', display: 'flex', flexDirection: 'column', padding: '1rem' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', bgcolor: '#131314' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', p: 2, borderBottom: '1px solid #444' }}>
         <Button variant="outlined" onClick={() => navigate('/')} sx={{ mr: 2, color: 'white', borderColor: 'white' }}>
           Back
         </Button>
-        <Typography variant="h5" component="h1" sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" component="h1" sx={{ flexGrow: 1, color: 'white' }}>
           Assist Me
         </Typography>
-        <IconButton color="inherit" size="small" onClick={() => setShowGuidelineManager(!showGuidelineManager)}>
+        <IconButton color="inherit" size="small" onClick={() => setShowGuidelineManager(!showGuidelineManager)} sx={{ color: 'white' }}>
           <SettingsIcon />
         </IconButton>
       </Box>
 
-      {showGuidelineManager && <GuidelineManager />}
-
-      {!showGuidelineManager && (
-        <>
-          <Box ref={chatHistoryRef} sx={{ flexGrow: 1, overflowY: 'auto', padding: '0.8rem', border: '1px solid #444', borderRadius: '8px', marginBottom: '0.8rem', backgroundColor: '#222' }}>
-            {conversationHistory.map((msg, index) => (
-              <Box key={index} sx={{ display: 'flex', justifyContent: msg.type === 'user' ? 'flex-end' : 'flex-start', marginBottom: '0.4rem' }}>
-                <Paper sx={{
-                  padding: '1rem 1.5rem',
-                  maxWidth: '75%',
-                  backgroundColor: msg.type === 'user' ? theme.palette.primary.main : '#424242',
-                  color: 'white',
-                  borderRadius: '20px',
-                  borderBottomLeftRadius: msg.type === 'user' ? '20px' : '5px',
-                  borderBottomRightRadius: msg.type === 'user' ? '5px' : '20px',
-                  fontSize: '1rem',
-                  boxShadow: '0px 3px 6px rgba(0,0,0,0.15)'
+      <Container maxWidth="md" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', py: 3 }}>
+        {showGuidelineManager ? (
+          <GuidelineManager />
+        ) : (
+          <>
+            <Box ref={chatHistoryRef} sx={{ flexGrow: 1, overflowY: 'auto', p: 2 }}>
+              {conversationHistory.map((msg, index) => (
+                <Box key={index} sx={{ 
+                  display: 'flex', 
+                  justifyContent: msg.type === 'user' ? 'flex-end' : 'flex-start', 
+                  mb: 2 
                 }}>
-                  {typeof msg.content === 'string' ? (
-                    <Typography variant="body2">{msg.content}</Typography>
-                  ) : (
-                    msg.content
-                  )}
-                </Paper>
-              </Box>
-            ))}
-          </Box>
-
-          {filePreviews.length > 0 && (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
-              {filePreviews.map((preview, index) => (
-                <img key={index} src={preview} alt={`Preview ${index}`} style={{ maxWidth: '100px', maxHeight: '100px' }} />
+                  <Paper sx={{
+                    p: 1.5,
+                    maxWidth: '80%',
+                    bgcolor: msg.type === 'user' ? '#3367D6' : '#3C4043',
+                    color: 'white',
+                    borderRadius: '18px',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+                  }}>
+                    {typeof msg.content === 'string' ? (
+                      <Typography variant="body1">{msg.content}</Typography>
+                    ) : (
+                      msg.content
+                    )}
+                  </Paper>
+                </Box>
               ))}
             </Box>
-          )}
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: '1.1rem', padding: '1rem' }}>
-            <TextField
-              fullWidth
-              multiline
-              variant="outlined"
-              placeholder="Type your message..."
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              sx={{ 
-                '& .MuiOutlinedInput-root': { 
-                  borderRadius: '20px',
-                  backgroundColor: '#333',
-                  padding: '10px 15px',
-                  color: 'white'
-                },
-                '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#555'
-                }
-              }}
-              InputProps={{ style: { fontSize: '1rem' } }}
-              disabled={isLoading}
-            />
-            <IconButton component="label" color="primary" disabled={isLoading}>
-              <UploadFileIcon />
-              <VisuallyHiddenInput type="file" multiple onChange={handleFileChange} />
-            </IconButton>
-            <IconButton color="primary" onClick={handleSendPrompt} disabled={isLoading || (!prompt && selectedFiles.length === 0)}>
-              {isLoading ? <CircularProgress size={24} /> : <SendIcon />}
-            </IconButton>
-          </Box>
-        </>
-      )}
-    </Container>
+            <Box sx={{ p: 2, borderTop: '1px solid #444' }}>
+              {filePreviews.length > 0 && (
+                <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
+                  {filePreviews.map((preview, index) => (
+                    <img key={index} src={preview} alt={`Preview ${index}`} style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover' }} />
+                  ))}
+                </Box>
+              )}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, bgcolor: '#3C4043', borderRadius: '24px', p: 0.5 }}>
+                <TextField
+                  fullWidth
+                  multiline
+                  maxRows={5}
+                  variant="standard"
+                  placeholder="Enter a prompt here"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      color: 'white',
+                      fontSize: '1rem',
+                      p: '10px 20px',
+                    },
+                  }}
+                  InputProps={{ disableUnderline: true }}
+                  disabled={isLoading}
+                />
+                <IconButton component="label" disabled={isLoading} sx={{ color: '#9E9E9E' }}>
+                  <UploadFileIcon />
+                  <VisuallyHiddenInput type="file" multiple onChange={handleFileChange} />
+                </IconButton>
+                <IconButton onClick={handleSendPrompt} disabled={isLoading || (!prompt && selectedFiles.length === 0)} sx={{ color: '#8AB4F8' }}>
+                  {isLoading ? <CircularProgress size={24} color="inherit" /> : <SendIcon />}
+                </IconButton>
+              </Box>
+            </Box>
+          </>
+        )}
+      </Container>
+    </Box>
   );
 }
 
