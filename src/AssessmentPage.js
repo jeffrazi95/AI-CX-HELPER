@@ -211,10 +211,18 @@ function AssessmentPage({ agentId }) {
           {assessmentResults.map((result, index) => (
             <Paper key={index} elevation={2} sx={{ padding: '1.5rem', marginBottom: '1rem' }}>
               <Typography variant="h6">Scenario {result.scenario_id}</Typography>
-              <Typography variant="body1">**Your Reply:** {result.agent_reply}</Typography>
-              <Typography variant="body1">**Score:** {result.score}/100</Typography>
-              <Typography variant="body1">**Good Points:** {result.feedback.good_points.join('; ')}</Typography>
-              <Typography variant="body1">**Needs Improvement:** {result.feedback.needs_improvement.join('; ')}</Typography>
+              <Typography variant="body1" component="div">
+                <Typography component="span" sx={{ fontWeight: 'bold' }}>Your Reply:</Typography> {result.agent_reply}
+              </Typography>
+              <Typography variant="body1" component="div">
+                <Typography component="span" sx={{ fontWeight: 'bold' }}>Score:</Typography> {result.score}/100
+              </Typography>
+              <Typography variant="body1" component="div">
+                <Typography component="span" sx={{ fontWeight: 'bold' }}>Good Points:</Typography> {result.feedback.good_points.join('; ')}
+              </Typography>
+              <Typography variant="body1" component="div">
+                <Typography component="span" sx={{ fontWeight: 'bold' }}>Needs Improvement:</Typography> {result.feedback.needs_improvement.join('; ')}
+              </Typography>
             </Paper>
           ))}
           <Button variant="contained" onClick={() => setSubmitted(false)}>Retake Assessment</Button>
