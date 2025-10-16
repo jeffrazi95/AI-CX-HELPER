@@ -1,8 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, Button, Box, TextField, CircularProgress, Alert, Paper, Select, MenuItem, FormControl, InputLabel, Modal } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 function AssessmentPage({ agentId }) {
+  const navigate = useNavigate();
   const [scenarios, setScenarios] = useState([]);
   const [agentReplies, setAgentReplies] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -146,9 +148,14 @@ function AssessmentPage({ agentId }) {
 
   return (
     <Container maxWidth="md" sx={{ padding: '2rem' }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Assessment for {agentId ? agentId.charAt(0).toUpperCase() + agentId.slice(1) : 'Agent'}
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Assessment for {agentId ? agentId.charAt(0).toUpperCase() + agentId.slice(1) : 'Agent'}
+        </Typography>
+        <Button variant="outlined" onClick={() => navigate('/')}>
+          Back
+        </Button>
+      </Box>
 
       <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
         <InputLabel id="week-select-label">Week</InputLabel>
