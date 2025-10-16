@@ -46,7 +46,7 @@ openai_api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=openai_api_key)
 
 # --- Database Setup ---
-DATABASE_FILE = "api/database.db"
+DATABASE_FILE = "/tmp/database.db"
 DATABASE_URL = f"sqlite:///{DATABASE_FILE}"
 engine = create_engine(DATABASE_URL, echo=True)
 
