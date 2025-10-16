@@ -177,19 +177,25 @@ function AssessmentPage({ agentId }) {
       {!submitted ? (
         <>
           {scenarios.map((scenario) => (
-            <Box key={scenario.id} sx={{ marginBottom: '2rem' }}>
-              <Typography variant="h6" gutterBottom>
+            <Paper key={scenario.id} elevation={3} sx={{ 
+              marginBottom: '2rem', 
+              padding: '2rem', 
+              borderRadius: '15px', 
+              backgroundColor: '#2c2c2c',
+              border: '1px solid #444'
+            }}>
+              <Typography variant="h5" component="h2" gutterBottom sx={{ color: '#f50057', fontWeight: 'bold' }}>
                 Scenario {scenario.id}: {scenario.title}
               </Typography>
-              <Typography variant="body1" sx={{ marginBottom: '0.5rem' }}>
-                Client Message: {scenario.client_message}
+              <Typography variant="body1" sx={{ marginBottom: '1.5rem', color: '#ccc' }}>
+                {scenario.client_message}
               </Typography>
               {scenario.image_path && (
                 <Box sx={{ marginBottom: '1rem' }}>
                   <img 
                     src={process.env.PUBLIC_URL + scenario.image_path} 
                     alt={`Scenario ${scenario.id}`} 
-                    style={{ maxWidth: '100px', height: 'auto', cursor: 'pointer' }} 
+                    style={{ maxWidth: '100px', height: 'auto', cursor: 'pointer', borderRadius: '8px' }} 
                     onClick={() => handleImageClick(process.env.PUBLIC_URL + scenario.image_path)} 
                   />
                 </Box>
@@ -199,12 +205,22 @@ function AssessmentPage({ agentId }) {
                 multiline
                 rows={5}
                 variant="outlined"
-                placeholder="Your reply to this scenario..."
+                placeholder="Craft your response here..."
                 value={agentReplies[scenario.id]}
                 onChange={(e) => handleReplyChange(scenario.id, e.target.value)}
-                sx={{ marginBottom: '1rem' }}
+                sx={{ 
+                  marginBottom: '1rem',
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '10px',
+                    backgroundColor: '#333',
+                    color: 'white'
+                  },
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#555'
+                  }
+                }}
               />
-            </Box>
+            </Paper>
           ))}
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button variant="contained" color="primary" onClick={handleSubmitAssessment} disabled={isSubmitting}>
@@ -216,7 +232,13 @@ function AssessmentPage({ agentId }) {
         <Box sx={{ marginTop: '2rem' }}>
           <Typography variant="h5" gutterBottom>Assessment Results for {selectedWeek}</Typography>
           {assessmentResults.map((result, index) => (
-            <Paper key={index} elevation={2} sx={{ padding: '1.5rem', marginBottom: '1rem' }}>
+            <Paper key={index} elevation={3} sx={{ 
+              padding: '2rem', 
+              marginBottom: '1.5rem', 
+              borderRadius: '15px', 
+              backgroundColor: '#2c2c2c',
+              border: '1px solid #444'
+            }}>
               <Typography variant="h6">Scenario {result.scenario_id}</Typography>
               <Typography variant="body1" component="div">
                 <Typography component="span" sx={{ fontWeight: 'bold' }}>Your Reply:</Typography> {result.agent_reply}
